@@ -16,17 +16,17 @@ def populate_tasks(conn, num_tasks):
     for _ in range(num_tasks):
         title = fake.text(max_nb_chars=100)
         description = fake.text()
-        status_id = fake.random_int(min=1, max=3)  # Assuming status_id starts from 1 and goes up to 3
-        user_id = fake.random_int(min=1, max=10)  # Assuming user_id starts from 1 and goes up to 10
+        status_id = fake.random_int(min=1, max=3)  
+        user_id = fake.random_int(min=1, max=20)  
         c.execute("INSERT INTO tasks (title, description, status_id, user_id) VALUES (?, ?, ?, ?)",
                   (title, description, status_id, user_id))
     conn.commit()
 
 def main():
-    conn = sqlite3.connect('task_management.db')
+    conn = sqlite3.connect('datab.db')
 
-    num_users = 10  # Number of users to generate
-    num_tasks = 20  # Number of tasks to generate
+    num_users = 20  # Кількість користувачів для створення
+    num_tasks = 30  # Кількість завдань для створення
 
     populate_users(conn, num_users)
     populate_tasks(conn, num_tasks)

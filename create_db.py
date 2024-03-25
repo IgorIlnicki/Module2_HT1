@@ -2,7 +2,7 @@ import sqlite3
 
 def create_tables():
     # Підключення до бази даних SQLite (створюється, якщо вона не існує)
-    conn = sqlite3.connect('task_management.db')
+    conn = sqlite3.connect('datab.db')
     c = conn.cursor()
 
     # Створити таблицю БД users
