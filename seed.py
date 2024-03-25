@@ -1,38 +1,38 @@
 from faker import Faker
-import psycopg2
+import sqlite3
 
 fake = Faker()
 
-# Connect to the database
-conn = psycopg2.connect(
-    dbname="your_database",
-    user="your_username",
-    password="your_password",
-    host="localhost"
-)
-cur = conn.cursor()
+def populate_users(conn, num_users):
+    c = conn.cursor()
+    for _ in range(num_users):
+        fullname = fake.name()
+        email = fake.email()
+        c.execute("INSERT INTO users (fullname, email) VALUES (?, ?)", (fullname, email))
+    conn.commit()
 
-# Populate users table
-for _ in range(10):
-    fullname = fake.name()
-    email = fake.email()
-    cur.execute("INSERT INTO users (fullname, email) VALUES (%s, %s)", (fullname, email))
+def populate_tasks(conn, num_tasks):
+    c = conn.cursor()
+    for _ in range(num_tasks):
+        title = fake.text(max_nb_chars=100)
+        description = fake.text()
+        status_id = fake.random_int(min=1, max=3)  # Assuming status_id starts from 1 and goes up to 3
+        user_id = fake.random_int(min=1, max=10)  # Assuming user_id starts from 1 and goes up to 10
+        c.execute("INSERT INTO tasks (title, description, status_id, user_id) VALUES (?, ?, ?, ?)",
+                  (title, description, status_id, user_id))
+    conn.commit()
 
-# Populate status table
-status_names = ['new', 'in progress', 'completed']
-for name in status_names:
-    cur.execute("INSERT INTO status (name) VALUES (%s)", (name,))
+def main():
+    conn = sqlite3.connect('task_management.db')
 
-# Populate tasks table
-for _ in range(20):
-    title = fake.text(max_nb_chars=100)
-    description = fake.text()
-    status_id = fake.random_int(min=1, max=len(status_names))
-    user_id = fake.random_int(min=1, max=10)
-    cur.execute("INSERT INTO tasks (title, description, status_id, user_id) VALUES (%s, %s, %s, %s)",
-                (title, description, status_id, user_id))
+    num_users = 10  # Number of users to generate
+    num_tasks = 20  # Number of tasks to generate
 
-# Commit the changes and close the connection
-conn.commit()
-cur.close()
-conn.close()
+    populate_users(conn, num_users)
+    populate_tasks(conn, num_tasks)
+
+    conn.close()
+    print("Data seeding completed!")
+
+if __name__ == "__main__":
+    main()
