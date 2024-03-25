@@ -346,7 +346,7 @@ def pripe_execute_by_status(args):  #2
         print("No tasks found for user with ID {}.".format(status_name))
 
 def pripe_get_tasks_by_user_id(args):   #1
-    user_id = int(args[0])   # конкретний ідентифікатор користувача, для якого треба отримати завдання
+    user_id = args[0]   # конкретний ідентифікатор користувача, для якого треба отримати завдання
     tasks = get_tasks_by_user_id(user_id)
     if tasks:
         print("Завдання для користувача з Id: {}: ".format(user_id))  
